@@ -1,4 +1,6 @@
 using Serilog;
+using Microsoft.EntityFrameworkCore;
+using HotelListing.API.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +18,12 @@ builder.Services.AddCors(options =>
 {
     //AllowAll is the name of the cors configuration
     options.AddPolicy("AllowAll",b => b.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod());
+});
+
+var connectionString = builder.Configuration.GetConnectionString("HotelListingDbConnectionString");
+builder.Services.AddDbContext<HotelListingDbContext>(options =>
+{
+    options.UseSqlServer(connectionString);
 });
 
 var app = builder.Build();
